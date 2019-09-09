@@ -16,8 +16,44 @@ object DataSetTransformationApp {
     //flatMapFunction(env)
     //distinctFunction(env)
     //joinFunction(env)
-    crossFunction(env)
+    //crossFunction(env)
+    joinTest(env)
 
+  }
+
+
+  def joinTest(env:ExecutionEnvironment): Unit ={
+    println("start------------------------------")
+    val info1 = ListBuffer[(String,String)]() //编号 名字
+    info1.append(("a1", "a123"));
+    info1.append(("b2", "b123"));
+    info1.append(("c3", "c133"));
+    info1.append(("d4", "d123"));
+
+    val info2 = ListBuffer[(String,String)]()  //编号 城市
+    info2.append(("a1","a123"));
+    info2.append(("b2","b123"));
+    info2.append(("c3","c123"));
+    info2.append(("d44","d123"));
+
+    val data1 =env.fromCollection(info1)
+    val data2 =env.fromCollection(info2)
+    //  where条件指定左边数据的key，equalTo指定右边数据的key（可以选字段名，也可以选择index）
+    //  利用apply方法  (a,b） => { a._1, b.2}  其中 a，b 就分别代表 经过join后的 左边的数据 和右边的数据
+    //  通过 a._1 这种方式 选择其中的第几个元素展
+    //  如果用OuterJoin方法 就要判断会不会出现元素为空的情况
+    //  比如leftOuterJoin时 右边data中就可能会出现空的情况，此时就应该加if语句 替换用“-”掉右边的所有元素
+    //  而fullOuterJoin时  可能左右都为空  就需要左右都加判断
+    data1.leftOuterJoin(data2).where(0).equalTo(0).apply((first,second) => {
+
+      if (second == null)  (first._1,first._2,"-")  else if (first._2 == second._2) ("-","-","-")else  (first._1,first._2,second._2) }).print()
+
+//    data1.fullOuterJoin(data2).where(0).equalTo(0).apply((first,second) => {
+//
+//      if (second == null)  (first._1,first._2,"-")  else  if (first == null) (second._1,"-",second._2)
+//      else (first._1,first._2,second._2)
+//
+//    }).print()
 
   }
 

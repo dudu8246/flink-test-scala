@@ -17,6 +17,7 @@ object DataSetSinkApp {
     val filePath = "/home/ccbh/chris-workspace/data/sink-out"
 
     //WriteMode参数：如果不使用OVERWRITE模式 会自己以该目录名创建一个文件并且每次都必须删除该文件才能执行
+    //  OVERWRITE模式则是创建一个目录然后根据并行度创建 1 2 3 等几个文件成装结果
     text.writeAsText(filePath,WriteMode.OVERWRITE).setParallelism(3)
 
     env.execute("DataSetSinkApp")
